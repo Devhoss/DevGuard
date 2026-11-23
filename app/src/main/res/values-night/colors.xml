@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Surfaces -->
+    <color name="bg">#101D2D</color>
+    <color name="card">#202A36</color>
+    <color name="chip_bg">#2A3644</color>
+    <color name="row_icon_bg">#263543</color>
+    <color name="divider">#2C3947</color>
+    <color name="toggle_off">#3C4A5A</color>
+    <color name="mint_dim">#436B5C</color>
+    <color name="mint_pressed">#5FCBA2</color>
+    <color name="mint">#75DDB5</color>
+
+    <!-- Text -->
+    <color name="text_primary">#F2F6FA</color>
+    <color name="text_secondary">#9DACBB</color>
+    <color name="text_tertiary">#7A8998</color>
+    <color name="accent_ink">#75DDB5</color>
+
+    <!-- Feedback -->
+    <color name="warn_ink">#FFC66B</color>
+    <color name="warn_bg">#33291A</color>
+    <color name="warn_border">#4D3D22</color>
+
+    <!-- Widgets -->
+    <color name="widget_card">#202A36</color>
+    <color name="widget_text">#F2F6FA</color>
+    <color name="widget_dim">#9DACBB</color>
+    <color name="widget_btn_secondary">#2C3947</color>
+    <color name="widget_chip_bg">#2A3644</color>
+    <color name="widget_dot_off">#4A5866</color>
+    <color name="widget_rim">#33FFFFFF</color>
+    <color name="widget_sheen">#66FFFFFF</color>
+    <color name="clear_text">#FFFFFF</color>
+    <color name="clear_text_dim">#D7E3EE</color>
+
+    <color name="ripple_light">#33FFFFFF</color>
+</resources>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DevGuard</string>
+    <string name="tagline">Developer control. Simplified.</string>
+
+    <string name="header_current_mode">Current mode</string>
+    <string name="mode_dev">Development Mode</string>
+    <string name="mode_dev_desc">Developer options and debugging are available.</string>
+    <string name="mode_safe">Safe Mode</string>
+    <string name="mode_safe_desc">Developer options and debugging are switched off.</string>
+    <string name="mode_dev_short">Development</string>
+    <string name="mode_safe_short">Safe</string>
+
+    <string name="action_safe">Activate Safe Mode</string>
+    <string name="action_restore">Restore Development Mode</string>
+    <string name="action_restore_short">Restore</string>
+
+    <string name="section_debugging">Debugging</string>
+
+    <string name="dev_options_title">Developer Options</string>
+    <string name="dev_options_desc">Master switch for all developer tools.</string>
+    <string name="usb_title">USB Debugging</string>
+    <string name="usb_desc">Allows ADB access over a USB cable.</string>
+    <string name="wifi_title">Wireless Debugging</string>
+    <string name="wifi_desc">Allows ADB access over Wi-Fi.</string>
+
+    <string name="state_on">On</string>
+    <string name="state_off">Off</string>
+    <string name="state_unavailable">Unavailable</string>
+
+    <string name="wifi_requires_android11">Requires Android 11 or newer</string>
+    <string name="wifi_needs_network">Wi-Fi is not connected</string>
+
+    <string name="section_snapshot">Saved configuration</string>
+    <string name="snapshot_none">No snapshot yet</string>
+    <string name="snapshot_none_desc">DevGuard captures one automatically the first time you activate Safe Mode.</string>
+    <string name="snapshot_saved">Snapshot saved</string>
+    <string name="snapshot_saved_desc">Your development configuration is stored on this device.</string>
+    <string name="snapshot_saved_at">Saved %1$s</string>
+    <string name="snapshot_version">Snapshot v%1$d</string>
+    <string name="snapshot_manage">Manage</string>
+    <string name="snapshot_dialog_title">Saved configuration</string>
+    <string name="snapshot_dialog_body">A snapshot records Developer Options, USB Debugging and Wireless Debugging exactly as they were. Activating Safe Mode never replaces an existing snapshot.</string>
+    <string name="snapshot_save_now">Save current configuration</string>
+    <string name="snapshot_forget">Forget snapshot</string>
+    <string name="snapshot_saved_toast">Configuration saved</string>
+    <string name="snapshot_forgotten_toast">Snapshot removed</string>
+    <string name="snapshot_delete_confirm_title">Forget snapshot?</string>
+    <string name="snapshot_delete_confirm_body">DevGuard will enable Developer Options only until a new snapshot is captured.</string>
+
+    <string name="setup_required">Setup required</string>
+    <string name="setup_required_body">DevGuard needs the WRITE_SECURE_SETTINGS permission. Android only grants it from a computer over ADB — one time, and it survives reboots.</string>
+    <string name="setup_copy_command">Copy ADB command</string>
+    <string name="setup_open_guide">Setup guide</string>
+    <string name="setup_granted">Permission granted</string>
+    <string name="setup_granted_body">DevGuard can control developer settings on this device.</string>
+    <string name="command_copied">ADB command copied</string>
+
+    <string name="setup_title">One-time setup</string>
+    <string name="setup_intro">Android does not show a permission dialog for WRITE_SECURE_SETTINGS. Grant it once from a computer; it stays granted across reboots and app updates.</string>
+    <string name="setup_step_1_title">Enable USB debugging</string>
+    <string name="setup_step_1_body">On this phone open Settings → Developer options and turn on USB debugging.</string>
+    <string name="setup_step_2_title">Connect to a computer</string>
+    <string name="setup_step_2_body">Install Android platform-tools, connect the cable and accept the “Allow USB debugging” prompt.</string>
+    <string name="setup_step_3_title">Run the command</string>
+    <string name="setup_step_3_body">Paste the command below into a terminal on the computer.</string>
+    <string name="setup_command_label">ADB command</string>
+    <string name="setup_recheck">Check permission</string>
+    <string name="setup_recheck_failed">Permission not granted yet</string>
+    <string name="setup_done">Done</string>
+    <string name="setup_no_adb_note">No wireless debugging or extra app is needed for this step.</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="theme_system">Follow system</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="settings_adb">ADB setup</string>
+    <string name="settings_adb_state_granted">Permission granted</string>
+    <string name="settings_tile">Quick Settings tile</string>
+    <string name="settings_tile_state">Add the one-tap mode switch to your panel</string>
+    <string name="settings_widget_surface">Widget surface</string>
+    <string name="settings_widget_surface_state">How widgets sit on your wallpaper</string>
+    <string name="widget_surface_default">Default</string>
+    <string name="widget_surface_clear">Clear</string>
+    <string name="settings_specular_rim">Specular highlight rim</string>
+    <string name="settings_specular_rim_desc">Bright edge and top reflection on the widgets</string>
+    <string name="settings_widgets">Home-screen widgets</string>
+    <string name="settings_widget_pill">Pin pill widget</string>
+    <string name="settings_widget_compact">Pin compact widget</string>
+    <string name="settings_widget_expanded">Pin expanded widget</string>
+    <string name="settings_widget_unavailable">This launcher does not support widget pinning</string>
+    <string name="tile_request_sent">Follow the on-screen prompt to add the tile</string>
+    <string name="settings_version">DevGuard %1$s</string>
+    <string name="settings_local_note">Everything stays on this device. No accounts, no analytics, no network access.</string>
+
+    <string name="tile_label">DevGuard</string>
+    <string name="tile_sub_safe">Safe Mode</string>
+    <string name="tile_sub_dev">Development Mode</string>
+    <string name="tile_state_safe">Developer options off</string>
+    <string name="tile_state_dev">Developer options on</string>
+
+    <string name="widget_pill_name">DevGuard · Switch</string>
+    <string name="widget_pill_desc">Just the mode switch, like a light switch.</string>
+    <string name="widget_pill_content">DevGuard, %1$s. Tap to switch mode.</string>
+    <string name="widget_compact_name">DevGuard · Mode</string>
+    <string name="widget_expanded_name">DevGuard · Controls</string>
+    <string name="widget_compact_desc">Current mode with a one-tap Safe Mode switch.</string>
+    <string name="widget_expanded_desc">All three developer settings plus the mode switch.</string>
+    <string name="widget_dev_options">Developer options</string>
+    <string name="widget_usb">USB debugging</string>
+    <string name="widget_wifi">Wireless debugging</string>
+    <string name="widget_wifi_short">Wireless</string>
+    <string name="widget_turn_on">Turn on</string>
+    <string name="widget_turn_off">Turn off</string>
+    <string name="widget_setup_needed">ADB setup needed</string>
+    <string name="widget_wifi_unavailable">Unavailable</string>
+
+    <string name="err_no_permission">Permission missing. Grant WRITE_SECURE_SETTINGS over ADB first.</string>
+    <string name="err_rejected">%1$s could not be changed. Android rejected the request.</string>
+    <string name="err_verify">%1$s did not change. Another app or device policy may be blocking it.</string>
+    <string name="err_unsupported">%1$s is not available on this Android version.</string>
+
+    <string name="result_safe_ok">Safe Mode active. Debugging is off.</string>
+    <string name="result_safe_partial">Safe Mode is only partly applied. %1$s</string>
+    <string name="result_restore_ok">Development Mode restored.</string>
+    <string name="result_restore_wifi_failed">Wireless debugging could not be restored: %1$s</string>
+    <string name="result_restore_no_snapshot">Developer Options enabled. No snapshot was available, so USB and Wireless debugging were left off.</string>
+    <string name="result_restore_failed">Restore failed. %1$s</string>
+    <string name="reason_wifi_off">Wi-Fi is not connected</string>
+    <string name="reason_rejected">Android rejected the change</string>
+    <string name="reason_dev_first">Developer Options could not be enabled</string>
+    <string name="reason_no_permission">grant the permission over ADB first</string>
+
+    <string name="status_needs_dev">Needs Developer Options</string>
+    <string name="wifi_not_connected_suffix"> · Wi-Fi not connected</string>
+    <string name="wifi_on_no_network">Wireless debugging is on, but Wi-Fi is not connected.</string>
+    <string name="err_need_dev_options">Turn on Developer Options first.</string>
+    <string name="tile_manual_title">Add the tile</string>
+    <string name="tile_manual_body">Open the Quick Settings panel, tap the pencil to edit, then drag DevGuard into your active tiles.</string>
+    <string name="widget_pin_prompt">Confirm the widget prompt to place it.</string>
+
+    <string name="about_note">DevGuard controls your own developer settings only. It cannot make other apps accept a device whose debugging state they check.</string>
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="navy">#101D2D</color>
+    <color name="navy_soft">#1A2A3D</color>
+    <color name="mint">#75DDB5</color>
+    <color name="mint_pressed">#5FCBA2</color>
+    <color name="mint_dim">#A9C9BC</color>
+    <color name="icon_bg">#101D2D</color>
+
+    <!-- Hero card (identical in both themes) -->
+    <color name="hero_bg">#101D2D</color>
+    <color name="hero_text">#FFFFFF</color>
+    <color name="hero_text_dim">#A9B8C7</color>
+    <color name="hero_label">#8FE7C6</color>
+
+    <!-- Surfaces -->
+    <color name="bg">#F1F4F6</color>
+    <color name="card">#FFFFFF</color>
+    <color name="chip_bg">#EDF1F4</color>
+    <color name="row_icon_bg">#E7F6EF</color>
+    <color name="divider">#E3E9ED</color>
+    <color name="toggle_off">#D3DBE2</color>
+
+    <!-- Text -->
+    <color name="text_primary">#101D2D</color>
+    <color name="text_secondary">#5A6A79</color>
+    <color name="text_tertiary">#8A99A6</color>
+    <color name="accent_ink">#12795A</color>
+
+    <!-- Feedback -->
+    <color name="warn_ink">#8A5A00</color>
+    <color name="warn_bg">#FFF3DC</color>
+    <color name="warn_border">#F2DBAE</color>
+
+    <!-- Widgets -->
+    <color name="widget_card">#FFFFFF</color>
+    <color name="widget_text">#101D2D</color>
+    <color name="widget_dim">#5A6A79</color>
+    <color name="widget_btn_secondary">#EDF1F4</color>
+    <color name="widget_chip_bg">#EDF1F4</color>
+    <color name="widget_dot_off">#C3CDD6</color>
+    <color name="widget_rim">#1F101D2D</color>
+    <color name="widget_sheen">#24101D2D</color>
+    <color name="clear_text">#FFFFFF</color>
+    <color name="clear_text_dim">#D7E3EE</color>
+
+    <color name="ripple_light">#1F101D2D</color>
+</resources>

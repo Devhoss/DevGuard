@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Clear surface, specular rim ON: no fill at all, only a glass rim and the
+     top-edge specular arc. The wallpaper shows through. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="22dp" />
+            <solid android:color="#00000000" />
+            <stroke
+                android:width="1dp"
+                android:color="#40FFFFFF" />
+        </shape>
+    </item>
+    <item
+        android:height="1dp"
+        android:left="10dp"
+        android:right="10dp"
+        android:top="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="1dp" />
+            <solid android:color="#73FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

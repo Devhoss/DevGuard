@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/setup_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:clipToPadding="true"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/screen_margin"
+        android:paddingTop="@dimen/space_m"
+        android:paddingEnd="@dimen/screen_margin"
+        android:paddingBottom="@dimen/space_xxl">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/setup_title"
+                android:rotation="180"
+                android:src="@drawable/ic_chevron"
+                android:tint="@color/text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_xs"
+                android:text="@string/setup_title"
+                android:textAppearance="@style/Text.Section" />
+        </LinearLayout>
+
+        <!-- Permission state -->
+        <LinearLayout
+            android:id="@+id/setup_state_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:background="@drawable/bg_card"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_l">
+
+            <ImageView
+                android:id="@+id/setup_state_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_warn"
+                android:tint="@color/warn_ink" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/setup_state_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_required"
+                    android:textAppearance="@style/Text.CardHeading" />
+
+                <TextView
+                    android:id="@+id/setup_state_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/setup_intro"
+                    android:textAppearance="@style/Text.CardDetail" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Step 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xl"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@drawable/bg_step_number"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/accent_ink"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_step_1_title"
+                    android:textAppearance="@style/Text.CardHeading" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/setup_step_1_body"
+                    android:textAppearance="@style/Text.CardDetail" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Step 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@drawable/bg_step_number"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@color/accent_ink"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_step_2_title"
+                    android:textAppearance="@style/Text.CardHeading" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/setup_step_2_body"
+                    android:textAppearance="@style/Text.CardDetail" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Step 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@drawable/bg_step_number"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@color/accent_ink"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setup_step_3_title"
+                    android:textAppearance="@style/Text.CardHeading" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/setup_step_3_body"
+                    android:textAppearance="@style/Text.CardDetail" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Command block -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="@dimen/space">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.12"
+                android:text="@string/setup_command_label"
+                android:textAllCaps="true"
+                android:textColor="@color/text_tertiary"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_s"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/setup_command"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="3dp"
+                    android:textColor="@color/text_primary"
+                    android:textIsSelectable="true"
+                    android:textSize="12sp" />
+
+                <ImageButton
+                    android:id="@+id/btn_copy"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="@dimen/space_s"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/setup_copy_command"
+                    android:src="@drawable/ic_copy"
+                    android:tint="@color/accent_ink" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_recheck"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/space_l"
+            android:background="@drawable/bg_button_primary"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/setup_recheck"
+            android:textColor="@color/navy"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/setup_no_adb_note"
+            android:textColor="@color/text_tertiary"
+            android:textSize="11sp" />
+    </LinearLayout>
+</ScrollView>

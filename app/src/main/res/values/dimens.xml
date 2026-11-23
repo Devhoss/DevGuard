@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">12dp</dimen>
+    <dimen name="space">16dp</dimen>
+    <dimen name="space_l">20dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+
+    <dimen name="radius_card">24dp</dimen>
+    <dimen name="radius_button">16dp</dimen>
+    <dimen name="radius_chip">100dp</dimen>
+
+    <dimen name="screen_margin">20dp</dimen>
+    <dimen name="row_icon_box">42dp</dimen>
+    <dimen name="row_icon_size">22dp</dimen>
+    <dimen name="button_height">52dp</dimen>
+    <dimen name="header_logo">40dp</dimen>
+</resources>

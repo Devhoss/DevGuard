@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_card"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_tile"
+            android:tint="@color/mint" />
+
+        <TextView
+            android:id="@+id/w_brand"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textColor="@color/widget_text"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/w_mode_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_widget_pill_off"
+            android:paddingStart="10dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="3dp"
+            android:text="@string/mode_safe_short"
+            android:textColor="@color/widget_dim"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/w_status_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="@string/tile_state_safe"
+        android:textColor="@color/widget_dim"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/w_mode_action"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/bg_widget_button_primary"
+        android:gravity="center"
+        android:text="@string/action_safe"
+        android:textColor="@color/navy"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+</LinearLayout>

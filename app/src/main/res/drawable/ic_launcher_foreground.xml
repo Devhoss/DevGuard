@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Toggle track -->
+    <path
+        android:fillColor="#75DDB5"
+        android:pathData="M43,39 H65 A15,15 0 0 1 65,69 H43 A15,15 0 0 1 43,39 Z" />
+
+    <!-- X motif on the "off" side of the track -->
+    <path
+        android:pathData="M38,49 L48,59"
+        android:strokeColor="#101D2D"
+        android:strokeLineCap="round"
+        android:strokeWidth="4" />
+    <path
+        android:pathData="M48,49 L38,59"
+        android:strokeColor="#101D2D"
+        android:strokeLineCap="round"
+        android:strokeWidth="4" />
+
+    <!-- Knob -->
+    <path
+        android:fillColor="#101D2D"
+        android:pathData="M54,54 A11,11 0 1 1 76,54 A11,11 0 1 1 54,54 Z" />
+</vector>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 2x1 pill: brand and a miniature switch, nothing else. The whole surface
+     switches between Safe and Development Mode. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_pill_desc"
+    android:initialLayout="@layout/widget_pill"
+    android:minHeight="40dp"
+    android:minWidth="110dp"
+    android:previewLayout="@layout/widget_pill"
+    android:resizeMode="none"
+    android:targetCellHeight="1"
+    android:targetCellWidth="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />
