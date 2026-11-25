@@ -326,8 +326,15 @@ public class MainActivity extends Activity {
         }
 
         modeTitle.setText(developmentMode ? R.string.mode_dev : R.string.mode_safe);
-        modeDesc.setText(developmentMode ? R.string.mode_dev_desc : R.string.mode_safe_desc);
-        modeAction.setText(developmentMode ? R.string.action_safe : R.string.action_restore);
+        if (hasPermission) {
+            modeDesc.setText(developmentMode ? R.string.mode_dev_desc : R.string.mode_safe_desc);
+            modeAction.setText(developmentMode ? R.string.action_safe : R.string.action_restore);
+        } else {
+            // The setup card sits below the fold; put the permission problem and the way out
+            // of it in the card the user sees first.
+            modeDesc.setText(R.string.setup_required_body);
+            modeAction.setText(R.string.action_setup);
+        }
         ((ImageView) findViewById(R.id.mode_icon)).setImageResource(
                 developmentMode ? R.drawable.ic_shield : R.drawable.ic_check);
 

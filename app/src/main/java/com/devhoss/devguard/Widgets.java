@@ -125,26 +125,21 @@ public final class Widgets {
         views.setTextColor(R.id.w_usb_label, palette.textColor);
         views.setTextColor(R.id.w_wifi_label, palette.textColor);
 
-        // Expanded: three settings with individual controls.
-        if (!hasPermission) {
-            bindRow(context, views, palette, R.id.w_dev_row, R.id.w_dev_dot, R.id.w_dev_value,
-                    false, null, 0);
-            bindRow(context, views, palette, R.id.w_usb_row, R.id.w_usb_dot, R.id.w_usb_value,
-                    false, null, 0);
+        // Expanded: three settings with individual controls. Without the permission the
+        // real values are still shown — never a fake "Off" — but the rows are not tappable.
+        bindRow(context, views, palette, R.id.w_dev_row, R.id.w_dev_dot, R.id.w_dev_value,
+                dev, context.getString(R.string.widget_dev_options),
+                hasPermission ? ACTION_TOGGLE_DEV : null, REQ_DEV);
+        bindRow(context, views, palette, R.id.w_usb_row, R.id.w_usb_dot, R.id.w_usb_value,
+                usb, context.getString(R.string.widget_usb),
+                hasPermission ? ACTION_TOGGLE_USB : null, REQ_USB);
+        if (wifiSupported) {
             bindRow(context, views, palette, R.id.w_wifi_row, R.id.w_wifi_dot, R.id.w_wifi_value,
-                    false, null, 0);
+                    wifi, context.getString(R.string.widget_wifi),
+                    hasPermission ? ACTION_TOGGLE_WIFI : null, REQ_WIFI);
         } else {
-            bindRow(context, views, palette, R.id.w_dev_row, R.id.w_dev_dot, R.id.w_dev_value,
-                    dev, ACTION_TOGGLE_DEV, REQ_DEV);
-            bindRow(context, views, palette, R.id.w_usb_row, R.id.w_usb_dot, R.id.w_usb_value,
-                    usb, ACTION_TOGGLE_USB, REQ_USB);
-            if (wifiSupported) {
-                bindRow(context, views, palette, R.id.w_wifi_row, R.id.w_wifi_dot, R.id.w_wifi_value,
-                        wifi, ACTION_TOGGLE_WIFI, REQ_WIFI);
-            } else {
-                bindUnavailable(context, views, palette, R.id.w_wifi_row, R.id.w_wifi_dot,
-                        R.id.w_wifi_value);
-            }
+            bindUnavailable(context, views, palette, R.id.w_wifi_row, R.id.w_wifi_dot,
+                    R.id.w_wifi_value, context.getString(R.string.widget_wifi));
         }
         views.setOnClickPendingIntent(R.id.w_root, openApp(context));
         return views;
@@ -152,7 +147,7 @@ public final class Widgets {
 
     private static void bindRow(Context context, RemoteViews views, Palette palette,
                                 int rowId, int dotId, int valueId, boolean enabled,
-                                String action, int requestCode) {
+                                String label, String action, int requestCode) {
         views.setImageViewResource(dotId, enabled ? R.drawable.dot_on : palette.offDot);
         views.setTextViewText(valueId,
                 context.getString(enabled ? R.string.state_on : R.string.state_off));
@@ -160,18 +155,21 @@ public final class Widgets {
                 enabled ? R.drawable.bg_widget_pill_on : palette.offPillBackground);
         views.setTextColor(valueId,
                 enabled ? context.getColor(R.color.navy) : palette.offPillText);
+        views.setContentDescription(rowId, context.getString(R.string.widget_row_content,
+                label, context.getString(enabled ? R.string.state_on : R.string.state_off)));
         if (action != null) {
             views.setOnClickPendingIntent(rowId, broadcast(context, action, requestCode));
-            views.setContentDescription(rowId, context.getString(R.string.app_name));
         }
     }
 
     private static void bindUnavailable(Context context, RemoteViews views, Palette palette,
-                                        int rowId, int dotId, int valueId) {
+                                        int rowId, int dotId, int valueId, String label) {
         views.setImageViewResource(dotId, palette.offDot);
         views.setTextViewText(valueId, context.getString(R.string.widget_wifi_unavailable));
         views.setInt(valueId, "setBackgroundResource", palette.offPillBackground);
         views.setTextColor(valueId, palette.offPillText);
+        views.setContentDescription(rowId, context.getString(R.string.widget_row_content, label,
+                context.getString(R.string.widget_wifi_unavailable)));
         views.setOnClickPendingIntent(rowId, openApp(context));
     }
 

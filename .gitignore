@@ -11,3 +11,4 @@ captures/
 !docs/**/*.apk
 keystore.properties
 *.jks
+tools/ui.xml

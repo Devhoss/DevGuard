@@ -10,17 +10,31 @@ import java.util.List;
  *
  * Safe Mode captures a snapshot only if none exists, then switches debugging off.
  * Development Mode restores exactly what the snapshot recorded — never "everything on".
- * Both verify the system afterwards and report partial results honestly.
+ * Every write is read back; an outcome is only {@link Status#SUCCESS} when the device
+ * actually matches the requested state for every setting.
  */
 public final class ModeController {
 
+    public enum Status {
+        /** Every requested setting holds the requested value. */
+        SUCCESS,
+        /** The mode was applied, but at least one setting could not be changed. */
+        PARTIAL,
+        /** Nothing was applied: no permission, or the mode itself could not change. */
+        FAILURE
+    }
+
     public static final class Outcome {
-        public final boolean ok;
+        public final Status status;
         public final String message;
 
-        Outcome(boolean ok, String message) {
-            this.ok = ok;
+        Outcome(Status status, String message) {
+            this.status = status;
             this.message = message;
+        }
+
+        public boolean ok() {
+            return status == Status.SUCCESS;
         }
     }
 
@@ -29,7 +43,7 @@ public final class ModeController {
 
     public static Outcome activateSafeMode(Context context) {
         if (!DevSettings.hasPermission(context)) {
-            return new Outcome(false, context.getString(R.string.err_no_permission));
+            return new Outcome(Status.FAILURE, context.getString(R.string.err_no_permission));
         }
         // Contract: capture once, never overwrite an existing snapshot.
         SnapshotStore.captureIfAbsent(context);
@@ -45,15 +59,11 @@ public final class ModeController {
             DevSettings.setUsbEnabled(context, false);
         }
         // Developer Options last: disabling it also tears ADB down on its own.
-        DevSettings.Result devResult = DevSettings.setDevOptionsEnabled(context, false);
+        DevSettings.setDevOptionsEnabled(context, false);
 
         RefreshCenter.refreshAll(context);
 
-        if (devResult != DevSettings.Result.OK && DevSettings.isDevOptionsEnabled(context)) {
-            return new Outcome(false, Actions.errorMessage(
-                    context, DevSettings.label(context, DevSettings.KEY_DEV_OPTIONS), devResult));
-        }
-
+        // Report what the device actually reads now, not what the writes returned.
         List<String> stillOn = new ArrayList<>();
         if (DevSettings.isDevOptionsEnabled(context)) {
             stillOn.add(DevSettings.label(context, DevSettings.KEY_DEV_OPTIONS));
@@ -66,18 +76,21 @@ public final class ModeController {
         }
 
         if (stillOn.isEmpty()) {
-            return new Outcome(true, context.getString(R.string.result_safe_ok));
+            return new Outcome(Status.SUCCESS, context.getString(R.string.result_safe_ok));
         }
+
         String message = context.getString(R.string.result_safe_partial, join(stillOn));
-        if (wirelessResult == DevSettings.Result.REJECTED && wirelessOn) {
+        if (wirelessOn && wirelessResult == DevSettings.Result.REJECTED) {
             message = message + " " + context.getString(R.string.reason_rejected) + ".";
         }
-        return new Outcome(false, message);
+        // Developer Options still on means the device is not in Safe Mode at all.
+        Status status = DevSettings.isDevOptionsEnabled(context) ? Status.FAILURE : Status.PARTIAL;
+        return new Outcome(status, message);
     }
 
     public static Outcome restoreDevelopmentMode(Context context) {
         if (!DevSettings.hasPermission(context)) {
-            return new Outcome(false, context.getString(R.string.err_no_permission));
+            return new Outcome(Status.FAILURE, context.getString(R.string.err_no_permission));
         }
         Snapshot snapshot = SnapshotStore.load(context);
         if (snapshot == null) {
@@ -85,66 +98,64 @@ public final class ModeController {
             DevSettings.Result result = DevSettings.setDevOptionsEnabled(context, true);
             RefreshCenter.refreshAll(context);
             if (result != DevSettings.Result.OK || !DevSettings.isDevOptionsEnabled(context)) {
-                return new Outcome(false, context.getString(R.string.result_restore_failed,
+                return new Outcome(Status.FAILURE, context.getString(R.string.result_restore_failed,
                         Actions.errorMessage(context,
                                 DevSettings.label(context, DevSettings.KEY_DEV_OPTIONS), result)));
             }
-            return new Outcome(true, context.getString(R.string.result_restore_no_snapshot));
+            return new Outcome(Status.SUCCESS, context.getString(R.string.result_restore_no_snapshot));
         }
 
         // 1. Developer Options first: the other two settings depend on it.
-        DevSettings.Result devResult = DevSettings.setDevOptionsEnabled(context, snapshot.devOptions);
-        if (devResult != DevSettings.Result.OK
-                || DevSettings.isDevOptionsEnabled(context) != snapshot.devOptions) {
+        DevSettings.setDevOptionsEnabled(context, snapshot.devOptions);
+        if (DevSettings.isDevOptionsEnabled(context) != snapshot.devOptions) {
             RefreshCenter.refreshAll(context);
-            return new Outcome(false, context.getString(R.string.result_restore_failed,
+            return new Outcome(Status.FAILURE, context.getString(R.string.result_restore_failed,
                     context.getString(R.string.reason_dev_first)));
-        }
-
-        if (!snapshot.devOptions) {
-            // The saved configuration was itself a safe one; keep debugging off.
-            DevSettings.setUsbEnabled(context, false);
-            if (DevSettings.supportsWireless()) {
-                DevSettings.setWirelessEnabled(context, false);
-            }
-            RefreshCenter.refreshAll(context);
-            return new Outcome(true, context.getString(R.string.result_restore_ok));
         }
 
         List<String> issues = new ArrayList<>();
 
-        // 2. USB debugging — only if it was on before.
-        if (snapshot.usb) {
-            DevSettings.Result usb = DevSettings.setUsbEnabled(context, true);
-            if (usb != DevSettings.Result.OK || !DevSettings.isUsbEnabled(context)) {
-                issues.add(context.getString(R.string.err_verify,
-                        DevSettings.label(context, DevSettings.KEY_USB)));
+        // 2. USB debugging — enforced both ways, so a saved "off" really ends up off.
+        if (DevSettings.isUsbEnabled(context) != snapshot.usb) {
+            DevSettings.Result usb = DevSettings.setUsbEnabled(context, snapshot.usb);
+            if (DevSettings.isUsbEnabled(context) != snapshot.usb) {
+                issues.add(Actions.errorMessage(context,
+                        DevSettings.label(context, DevSettings.KEY_USB), usb));
             }
-        } else {
-            DevSettings.setUsbEnabled(context, false);
         }
 
-        // 3. Wireless debugging — only on Android 11+, and only if requested.
-        if (snapshot.wireless == Snapshot.WIRELESS_ON && DevSettings.supportsWireless()) {
-            if (!DevSettings.isWifiConnected(context)) {
+        // 3. Wireless debugging — Android 11+ only, and unknown snapshots are left alone.
+        if (DevSettings.supportsWireless()
+                && snapshot.wireless != Snapshot.WIRELESS_UNKNOWN) {
+            boolean desired = snapshot.wireless == Snapshot.WIRELESS_ON;
+            boolean wifiConnected = DevSettings.isWifiConnected(context);
+            DevSettings.Result wifi = DevSettings.Result.OK;
+            if (DevSettings.isWirelessEnabled(context) != desired) {
+                wifi = DevSettings.setWirelessEnabled(context, desired);
+            }
+            if (DevSettings.isWirelessEnabled(context) != desired) {
+                String issue = Actions.errorMessage(context,
+                        DevSettings.label(context, DevSettings.KEY_WIRELESS), wifi);
+                if (desired && !wifiConnected) {
+                    issue = issue + " " + context.getString(R.string.reason_wifi_off) + ".";
+                }
+                issues.add(issue);
+            } else if (desired && !wifiConnected) {
+                // Android accepts the flag without a transport and then tears wireless
+                // debugging down again, so a wireless link was not actually restored.
                 issues.add(context.getString(R.string.result_restore_wifi_failed,
                         context.getString(R.string.reason_wifi_off)));
             }
-            DevSettings.Result wifi = DevSettings.setWirelessEnabled(context, true);
-            if (wifi != DevSettings.Result.OK && DevSettings.isWifiConnected(context)) {
-                issues.add(context.getString(R.string.result_restore_wifi_failed,
-                        context.getString(R.string.reason_rejected)));
-            }
-        } else if (snapshot.wireless == Snapshot.WIRELESS_OFF && DevSettings.supportsWireless()) {
-            DevSettings.setWirelessEnabled(context, false);
         }
 
         RefreshCenter.refreshAll(context);
 
-        if (issues.isEmpty()) {
-            return new Outcome(true, context.getString(R.string.result_restore_ok));
+        if (!issues.isEmpty()) {
+            return new Outcome(Status.PARTIAL,
+                    context.getString(R.string.result_restore_partial, join(issues)));
         }
-        return new Outcome(true, join(issues));
+
+        return new Outcome(Status.SUCCESS, context.getString(R.string.result_restore_ok));
     }
 
     private static String join(List<String> parts) {

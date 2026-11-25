@@ -35,8 +35,14 @@ public final class SnapshotStore {
                         : Snapshot.WIRELESS_UNKNOWN,
                 System.currentTimeMillis(),
                 Snapshot.VERSION);
-        prefs(context).edit().putString(KEY_SNAPSHOT, snapshot.toJson().toString()).apply();
+        save(context, snapshot);
         return snapshot;
+    }
+
+    /** Persists a snapshot. commit(), not apply(): it must be on disk before a reboot. */
+    public static boolean save(Context context, Snapshot snapshot) {
+        return prefs(context).edit()
+                .putString(KEY_SNAPSHOT, snapshot.toJson().toString()).commit();
     }
 
     /** Captures only when nothing is saved yet — the safe-mode contract. */
@@ -46,6 +52,6 @@ public final class SnapshotStore {
     }
 
     public static void forget(Context context) {
-        prefs(context).edit().remove(KEY_SNAPSHOT).apply();
+        prefs(context).edit().remove(KEY_SNAPSHOT).commit();
     }
 }

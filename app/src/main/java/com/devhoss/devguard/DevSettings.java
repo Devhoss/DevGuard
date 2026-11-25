@@ -96,6 +96,11 @@ public final class DevSettings {
         if (!hasPermission(context)) {
             return Result.MISSING_PERMISSION;
         }
+        if (Faults.rejectWrite(key)) {
+            // Debug builds only; the release classifier is a no-op. Lets the device
+            // tests prove the app reports a refused write instead of a false success.
+            return Result.REJECTED;
+        }
         final ContentResolver resolver = context.getContentResolver();
         try {
             Settings.Global.putInt(resolver, key, enabled ? 1 : 0);
@@ -118,6 +123,11 @@ public final class DevSettings {
     /**
      * Wireless debugging needs a Wi-Fi transport. Android may still accept the
      * setting without one, but wireless ADB will not actually come up.
+     *
+     * <p>The active network is not enough: with a VPN connected it is the VPN, whose
+     * capabilities may not expose the Wi-Fi transport. Every network is inspected
+     * instead, so a VPN never looks like "Wi-Fi disconnected". Only
+     * {@code ACCESS_NETWORK_STATE} is needed — no network access is performed.</p>
      */
     public static boolean isWifiConnected(Context context) {
         ConnectivityManager manager =
@@ -125,16 +135,32 @@ public final class DevSettings {
         if (manager == null) {
             return false;
         }
+        Network[] networks;
         try {
-            Network network = manager.getActiveNetwork();
-            if (network == null) {
-                return false;
-            }
-            NetworkCapabilities capabilities = manager.getNetworkCapabilities(network);
-            return capabilities != null
-                    && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+            // Deprecated since API 31, but still the only synchronous way to enumerate
+            // transports without opening a network callback just to ask a yes/no question.
+            networks = manager.getAllNetworks();
         } catch (RuntimeException e) {
             return false;
         }
+        if (networks == null) {
+            return false;
+        }
+        for (Network network : networks) {
+            NetworkCapabilities capabilities;
+            try {
+                capabilities = manager.getNetworkCapabilities(network);
+            } catch (RuntimeException e) {
+                continue;
+            }
+            if (capabilities == null) {
+                continue;
+            }
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    && !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

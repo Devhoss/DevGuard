@@ -32,17 +32,25 @@ public class SettingsTileService extends TileService {
             openApp();
             return;
         }
-        final boolean developmentMode = DevSettings.currentMode(this) == DevSettings.Mode.DEVELOPMENT;
         // Enabling debugging from the lock screen requires the device to be unlocked first.
-        unlockAndRun(new Runnable() {
-            @Override
-            public void run() {
-                perform(developmentMode);
-            }
-        });
+        // The mode is read inside the runnable: the state must not be decided before the
+        // unlock prompt, which the user may leave open for a while.
+        try {
+            unlockAndRun(new Runnable() {
+                @Override
+                public void run() {
+                    perform();
+                }
+            });
+        } catch (RuntimeException e) {
+            // The tile host refused to run the unlock flow: change nothing while locked.
+            Toast.makeText(getApplicationContext(), R.string.tile_locked, Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void perform(boolean developmentMode) {
+    private void perform() {
+        boolean developmentMode =
+                DevSettings.currentMode(this) == DevSettings.Mode.DEVELOPMENT;
         ModeController.Outcome outcome = developmentMode
                 ? ModeController.activateSafeMode(this)
                 : ModeController.restoreDevelopmentMode(this);

@@ -53,10 +53,14 @@ public final class Snapshot {
             if (version < 1 || version > VERSION) {
                 return null;
             }
+            int wireless = json.optInt("wireless", WIRELESS_UNKNOWN);
+            if (wireless < WIRELESS_UNKNOWN || wireless > WIRELESS_ON) {
+                wireless = WIRELESS_UNKNOWN;
+            }
             return new Snapshot(
                     json.optBoolean("devOptions", true),
                     json.optBoolean("usb", false),
-                    json.optInt("wireless", WIRELESS_UNKNOWN),
+                    wireless,
                     json.optLong("timestamp", 0L),
                     version);
         } catch (JSONException e) {

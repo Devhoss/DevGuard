@@ -22,7 +22,7 @@ one-time `WRITE_SECURE_SETTINGS` grant.
 - Package: `com.devhoss.devguard`
 - Min SDK 26 (Android 8.0), target/compile SDK 35
 - Native Views + XML, `TileService`, three `AppWidgetProvider`s
-- Release APK: ~68 KB
+- Version 1.0.1 · Release APK: ~69 KB
 
 ---
 
@@ -40,7 +40,9 @@ one-time `WRITE_SECURE_SETTINGS` grant.
 - Restores Developer Options first, then USB and Wireless debugging **exactly as the snapshot
   recorded them** — never "turn everything on".
 - If no snapshot exists, only Developer Options is enabled; debugging is left alone.
-- Wireless debugging failures (Wi-Fi off, Android rejection) are explained rather than hidden.
+- The result is always read back from the device and reported as one of three states: **success**,
+  **partial** (the mode changed but a setting did not) or **failure** (nothing changed). A refused
+  USB or Wireless write is never reported as a successful restore.
 
 ### Surfaces
 
@@ -53,7 +55,7 @@ one-time `WRITE_SECURE_SETTINGS` grant.
 - **Expanded widget** (4×3): all three settings with individual controls plus the mode action.
 - **Widget surface** — *Default* (solid card) or *Clear* (transparent glass, no fill, so the
   wallpaper shows through), each with an optional **Specular highlight rim**: a brighter edge
-  plus a thin top-edge reflection. Both widgets follow the choice instantly.
+  plus a thin top-edge reflection. Pill, compact and expanded widgets follow the choice instantly.
 
 All surfaces read the same `DevSettings` controller and are refreshed through `RefreshCenter`
 after every write, so the dashboard, tile and widgets always mirror the real system state.
@@ -68,17 +70,17 @@ Requirements: JDK 17+ (JDK 21 works), Android SDK Platform 35 and Build-Tools 35
 ```bash
 cd devguard
 
-# Debug APK  -> app/build/outputs/apk/debug/DevGuard-1.0.0.apk
+# Debug APK  -> app/build/outputs/apk/debug/DevGuard-1.0.1.apk
 ./gradlew assembleDebug
 
-# Release APK -> app/build/outputs/apk/release/DevGuard-1.0.0.apk
+# Release APK -> app/build/outputs/apk/release/DevGuard-1.0.1.apk
 ./gradlew assembleRelease
 ```
 
 Prebuilt APKs are also copied to `dist/`:
 
-- `dist/DevGuard-1.0.0-debug.apk`
-- `dist/DevGuard-1.0.0-release.apk` (signed with the project keystore, certificate `CN=DevGuard, O=DevHoss, C=US`)
+- `dist/DevGuard-1.0.1-debug.apk`
+- `dist/DevGuard-1.0.1-release.apk` (signed with the project keystore, certificate `CN=DevGuard, O=DevHoss, C=US`)
 
 `local.properties` points at `X:/Android/Sdk` on this machine; change `sdk.dir` if your SDK
 lives elsewhere. The release build reads `keystore.properties` + `devguard-release.jks`
@@ -89,7 +91,7 @@ lives elsewhere. The release build reads `keystore.properties` + `devguard-relea
 ## Install and one-time ADB setup
 
 ```bash
-adb install -r dist/DevGuard-1.0.0-release.apk
+adb install -r dist/DevGuard-1.0.1-release.apk
 adb shell pm grant com.devhoss.devguard android.permission.WRITE_SECURE_SETTINGS
 ```
 
@@ -114,6 +116,7 @@ app/src/main/java/com/devhoss/devguard/
   DevSettings.java            Single source of truth: read / write / verify the three settings
   Snapshot.java               Immutable snapshot model (versioned JSON)
   SnapshotStore.java          Private SharedPreferences storage, capture-if-absent semantics
+  Faults.java                 Test seam for refused-write tests (inert in release; see below)
   ModeController.java         Safe Mode / Development Mode orchestration + honest outcomes
   Actions.java                Single-setting actions with user-facing errors
   RefreshCenter.java          Refreshes widgets, tile and open activities after a change
@@ -144,7 +147,9 @@ layer for themed icons.
 
 ## Privacy
 
-- No internet permission, no analytics, no advertising, no accounts, no telemetry.
+- No `INTERNET` permission, no analytics, no advertising, no accounts, no telemetry, and no
+  network requests of any kind. The app declares `ACCESS_NETWORK_STATE` for one read-only
+  question — "is a Wi-Fi transport connected?" — because Wireless Debugging needs one.
 - No installed-app lists, no accessibility service, no background service.
 - The only persisted data is the snapshot (three booleans + timestamp + version), the theme
   preference and the widget surface choice, in the app's private storage. Backups are disabled.
@@ -160,10 +165,13 @@ Device: **Samsung Galaxy A53 5G (SM-A536E), Android 16 / One UI, build SDK 36**,
 Verified on the real device: permission onboarding and recheck, wireless toggle, snapshot
 capture, Safe Mode (all three settings off, ADB link drops), restore through the saved
 snapshot, repeated Safe Mode without overwriting the snapshot, tile click and tile state,
-all three widgets (pill, compact and the full expanded one), individual widget action delivery, live sync
-after an external settings change, light/dark themes, the Clear widget surface with the
-specular rim on and off, and persistence. Screenshots live in
-`docs/screenshots/`. The detailed report, including what was *not* covered, is in
+all three widgets (pill, compact and the full expanded one), a pill-widget tap, individual
+widget action delivery, live sync after an external settings change, light/dark themes, the
+Clear widget surface with the specular rim on and off, partial restoration with Wi-Fi off,
+injected USB and Wireless write refusals, a snapshot whose Developer Options were OFF,
+permission revocation, and reboot persistence (permission, snapshot, widgets, tile and a
+restore after boot). Screenshots live in `docs/screenshots/`. The detailed report, including
+what was *not* covered and how the debug harness works, is in
 [`docs/TESTING.md`](docs/TESTING.md).
 
 ---
@@ -177,6 +185,10 @@ specular rim on and off, and persistence. Screenshots live in
 - Manufacturer policies can reject a write. Every write is read back, and the app reports a
   refusal instead of a false success.
 - A snapshot stores booleans only: it does not preserve wireless debugging port/pairing details.
+- Wireless debugging cannot work without a Wi-Fi transport. Android also clears the setting when
+  Wi-Fi drops, so a restore with Wi-Fi off is reported as partial instead of pretending the
+  wireless link is back.
+- Wi-Fi detection enumerates every network, so a connected VPN does not look like "no Wi-Fi".
 - No automatic "restore after N minutes" scheduling, no app rules, no Tasker/Shizuku/remote
   control — deliberately out of scope for V1.
 - Widgets refresh on actions and whenever the app refreshes; there is no polling.
