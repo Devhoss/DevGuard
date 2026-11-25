@@ -16,8 +16,10 @@ developer settings that everyday apps complain about:
 | Wireless Debugging | `adb_wifi_enabled` | Android 11+ |
 
 It is a framework-only Java app: no backend, no accounts, no analytics, no ad libraries and
-no network permission. Everything happens on the device through `Settings.Global` and the
-one-time `WRITE_SECURE_SETTINGS` grant.
+no `INTERNET` permission. It makes no network requests at all; the only network-related
+declaration is `ACCESS_NETWORK_STATE`, used to ask Android whether a Wi-Fi transport exists.
+Everything happens on the device through `Settings.Global` and the one-time
+`WRITE_SECURE_SETTINGS` grant.
 
 - Package: `com.devhoss.devguard`
 - Min SDK 26 (Android 8.0), target/compile SDK 35
