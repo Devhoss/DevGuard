@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tall, narrow cell: launchers can hand the 2x1 pill a full-height column when the
+     home screen is rotated. The card keeps its normal surface; the brand turns on its
+     side at the top and the normal-sized switch sits at the bottom edge. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_pill_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_card"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingStart="4dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="4dp"
+    android:paddingBottom="6dp">
+
+    <!-- Rotated in place: the label's measured width becomes its height on screen, so the
+         block is exactly as tall as the label is long and nothing is clipped. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp">
+
+        <TextView
+            android:id="@+id/w_pill_brand"
+            android:layout_width="62dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:rotation="-90"
+            android:text="@string/app_name"
+            android:textColor="@color/widget_text"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <!-- Theme surface between the label and the switch. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:layout_width="26dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/w_pill_track"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_widget_track_off" />
+
+        <ImageView
+            android:id="@+id/w_pill_thumb_top"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="3dp"
+            android:contentDescription="@null"
+            android:src="@drawable/bg_widget_thumb_on"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/w_pill_thumb_bottom"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="3dp"
+            android:contentDescription="@null"
+            android:src="@drawable/bg_widget_thumb_off" />
+    </FrameLayout>
+</LinearLayout>

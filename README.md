@@ -24,7 +24,7 @@ Everything happens on the device through `Settings.Global` and the one-time
 - Package: `com.devhoss.devguard`
 - Min SDK 26 (Android 8.0), target/compile SDK 35
 - Native Views + XML, `TileService`, three `AppWidgetProvider`s
-- Version 1.0.1 · Release APK: ~69 KB
+- Version 1.0.2 · Release APK: ~69 KB
 
 ---
 
@@ -52,7 +52,9 @@ Everything happens on the device through `Settings.Global` and the one-time
 - **Quick Settings tile** that switches modes without opening the app, with lock-screen unlock
   handling and correct active/inactive state.
 - **Pill widget** (2×1): brand and a miniature switch, nothing else — tap the pill anywhere to
-  switch between Safe and Development Mode.
+  switch between Safe and Development Mode. It follows the cell it is given: rotated to landscape,
+  some launchers hand it a tall single column, and the pill turns upright — the label runs down the
+  card and the switch sits at its bottom edge.
 - **Compact widget** (2×2): brand, mode chip, status line, one-tap mode action.
 - **Expanded widget** (4×3): all three settings with individual controls plus the mode action.
 - **Widget surface** — *Default* (solid card) or *Clear* (transparent glass, no fill, so the
@@ -72,17 +74,17 @@ Requirements: JDK 17+ (JDK 21 works), Android SDK Platform 35 and Build-Tools 35
 ```bash
 cd devguard
 
-# Debug APK  -> app/build/outputs/apk/debug/DevGuard-1.0.1.apk
+# Debug APK  -> app/build/outputs/apk/debug/DevGuard-1.0.2.apk
 ./gradlew assembleDebug
 
-# Release APK -> app/build/outputs/apk/release/DevGuard-1.0.1.apk
+# Release APK -> app/build/outputs/apk/release/DevGuard-1.0.2.apk
 ./gradlew assembleRelease
 ```
 
 Prebuilt APKs are also copied to `dist/`:
 
-- `dist/DevGuard-1.0.1-debug.apk`
-- `dist/DevGuard-1.0.1-release.apk` (signed with the project keystore, certificate `CN=DevGuard, O=DevHoss, C=US`)
+- `dist/DevGuard-1.0.2-debug.apk`
+- `dist/DevGuard-1.0.2-release.apk` (signed with the project keystore, certificate `CN=DevGuard, O=DevHoss, C=US`)
 
 `local.properties` points at `X:/Android/Sdk` on this machine; change `sdk.dir` if your SDK
 lives elsewhere. The release build reads `keystore.properties` + `devguard-release.jks`
@@ -93,7 +95,7 @@ lives elsewhere. The release build reads `keystore.properties` + `devguard-relea
 ## Install and one-time ADB setup
 
 ```bash
-adb install -r dist/DevGuard-1.0.1-release.apk
+adb install -r dist/DevGuard-1.0.2-release.apk
 adb shell pm grant com.devhoss.devguard android.permission.WRITE_SECURE_SETTINGS
 ```
 

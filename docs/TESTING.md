@@ -110,3 +110,25 @@ The behaviour is Android's, not another app's.
 | `widget-pill-dev.png` | 2×1 pill widget in Development Mode |
 | `after-reboot-safe.png` | Home screen after reboot: pill shows Safe |
 | `widget-pill.png`, `quick-settings.png` | Earlier visual set (1.0.0, unchanged artwork) |
+
+---
+
+## 1.0.2 — responsive pill on rotation
+
+The launcher transposes the home-screen grid when the device rotates, so the 2×1 pill is handed a
+tall single column instead of a wide row. Cell sizes read from `dumpsys appwidget` on the test
+device (SM-A536E, Android 16, 420 dpi):
+
+| Orientation | Pill cell | Rendering |
+|---|---|---|
+| Portrait | 235 × 50 dp | Flat pill: brand left, 44 × 26 dp switch right (unchanged from 1.0.1) |
+| Landscape, full column | 50 × 229 dp | Upright pill: rotated "DevGuard" label at the top, 26 × 48 dp switch at the bottom edge |
+| Landscape, column shrunk by hand | 50 × 139 dp | Same upright layout, theme surface between label and switch, nothing clipped |
+
+`Widgets` now builds each widget for its own cell from `getAppWidgetOptions` (portrait size = the
+minimum, landscape = the maximum) and all three providers rebuild on
+`onAppWidgetOptionsChanged`, so rotation re-renders instead of stretching the old layout.
+
+Verified by taking device screenshots in each state above. Not verified: the upright switch in Safe
+Mode (muted track, thumb at the bottom) — reaching that state turns USB debugging off and drops
+ADB, so it was left to normal use.

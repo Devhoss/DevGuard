@@ -5,6 +5,9 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.RemoteViews;
 
 /** Builds widget content from the real system settings and keeps both sizes in sync. */
@@ -45,10 +48,53 @@ public final class Widgets {
         if (ids == null || ids.length == 0) {
             return;
         }
-        RemoteViews views = build(context, layout);
         for (int id : ids) {
-            manager.updateAppWidget(id, views);
+            int[] cell;
+            try {
+                cell = cellSize(context, manager.getAppWidgetOptions(id));
+            } catch (RuntimeException e) {
+                cell = new int[]{0, 0};
+            }
+            manager.updateAppWidget(id, build(context, layout, cell[0], cell[1]));
         }
+    }
+
+    /**
+     * Current cell size in dp, as handed to this widget by the launcher. Options carry the
+     * portrait size as the minimum and the landscape size as the maximum; a few launchers
+     * report only the current size. Returns {0, 0} when no size is known.
+     */
+    private static int[] cellSize(Context context, Bundle options) {
+        if (options == null) {
+            return new int[]{0, 0};
+        }
+        boolean landscape = context.getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+        int width = options.getInt(landscape
+                ? AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
+                : AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0);
+        if (width <= 0) {
+            width = options.getInt(landscape
+                    ? AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH
+                    : AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, 0);
+        }
+        int height = options.getInt(landscape
+                ? AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
+                : AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0);
+        if (height <= 0) {
+            height = options.getInt(landscape
+                    ? AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
+                    : AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0);
+        }
+        return new int[]{width, height};
+    }
+
+    /**
+     * A rotated home screen can give the flat pill a full-height column. Past that point the
+     * horizontal row has nothing left to squeeze, so the switch turns upright.
+     */
+    private static boolean isTallCell(int widthDp, int heightDp) {
+        return widthDp > 0 && heightDp > 0 && heightDp * 2 >= widthDp * 3;
     }
 
     /** Colours for the widget text and status pills, depending on the surface material. */
@@ -69,6 +115,13 @@ public final class Widgets {
     }
 
     static RemoteViews build(Context context, int layout) {
+        return build(context, layout, 0, 0);
+    }
+
+    static RemoteViews build(Context context, int layout, int widthDp, int heightDp) {
+        if (layout == R.layout.widget_pill && isTallCell(widthDp, heightDp)) {
+            layout = R.layout.widget_pill_tall;
+        }
         RemoteViews views = new RemoteViews(context.getPackageName(), layout);
         final Palette palette = new Palette(context, WidgetSurface.isClear(context));
         final int navy = context.getColor(R.color.navy);
@@ -79,8 +132,26 @@ public final class Widgets {
         boolean wifiSupported = DevSettings.supportsWireless();
         boolean wifi = wifiSupported && DevSettings.isWirelessEnabled(context);
 
-        int rootId = layout == R.layout.widget_pill ? R.id.w_pill_root : R.id.w_root;
+        boolean pill = layout == R.layout.widget_pill || layout == R.layout.widget_pill_tall;
+        int rootId = pill ? R.id.w_pill_root : R.id.w_root;
         views.setInt(rootId, "setBackgroundResource", WidgetSurface.backgroundFor(context));
+
+        if (layout == R.layout.widget_pill_tall) {
+            // Upright switch: thumb at the top means Development Mode, at the bottom Safe Mode.
+            views.setTextColor(R.id.w_pill_brand, palette.textColor);
+            views.setInt(R.id.w_pill_track, "setBackgroundResource",
+                    dev ? R.drawable.bg_widget_track_on : R.drawable.bg_widget_track_off);
+            views.setViewVisibility(R.id.w_pill_thumb_top,
+                    dev ? View.VISIBLE : View.GONE);
+            views.setViewVisibility(R.id.w_pill_thumb_bottom,
+                    dev ? View.GONE : View.VISIBLE);
+            views.setContentDescription(R.id.w_pill_root, context.getString(
+                    R.string.widget_pill_content,
+                    context.getString(dev ? R.string.mode_dev_short : R.string.mode_safe_short)));
+            views.setOnClickPendingIntent(R.id.w_pill_root,
+                    broadcast(context, ACTION_MODE, REQ_MODE));
+            return views;
+        }
 
         if (layout == R.layout.widget_pill) {
             // Nothing but the switch: the whole pill is the toggle.
