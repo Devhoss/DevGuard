@@ -132,3 +132,13 @@ minimum, landscape = the maximum) and all three providers rebuild on
 Verified by taking device screenshots in each state above. Not verified: the upright switch in Safe
 Mode (muted track, thumb at the bottom) — reaching that state turns USB debugging off and drops
 ADB, so it was left to normal use.
+
+### 1.0.3 — upright pill alignment and top inset
+
+Measured from device screenshots in the 50 × 229 dp rotated cell at 420 dpi: the switch's centre sat
+at x = 440.7 px and the card's centre at 441.0 px, but the rotated label's ink sat at 444.8 px — the
+font's ascent/descent leaves the glyphs low in the line box, and `rotation="-90"` turns that vertical
+offset into a horizontal one. A 3 dp bottom padding on the label lifts the ink, giving label ink
+440.8 px vs switch 440.7 px, i.e. one shared centre line. The top inset went from 6 dp to 14 dp so
+the label clears the card's rounded corner (Tailscale-style gap); the layout needs 130 dp, still
+inside the 139 dp cell the home screen can shrink to.

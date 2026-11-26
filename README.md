@@ -24,7 +24,7 @@ Everything happens on the device through `Settings.Global` and the one-time
 - Package: `com.devhoss.devguard`
 - Min SDK 26 (Android 8.0), target/compile SDK 35
 - Native Views + XML, `TileService`, three `AppWidgetProvider`s
-- Version 1.0.2 · Release APK: ~69 KB
+- Version 1.0.3 · Release APK: ~70 KB
 
 ---
 
@@ -74,17 +74,17 @@ Requirements: JDK 17+ (JDK 21 works), Android SDK Platform 35 and Build-Tools 35
 ```bash
 cd devguard
 
-# Debug APK  -> app/build/outputs/apk/debug/DevGuard-1.0.2.apk
+# Debug APK  -> app/build/outputs/apk/debug/DevGuard-1.0.3.apk
 ./gradlew assembleDebug
 
-# Release APK -> app/build/outputs/apk/release/DevGuard-1.0.2.apk
+# Release APK -> app/build/outputs/apk/release/DevGuard-1.0.3.apk
 ./gradlew assembleRelease
 ```
 
 Prebuilt APKs are also copied to `dist/`:
 
-- `dist/DevGuard-1.0.2-debug.apk`
-- `dist/DevGuard-1.0.2-release.apk` (signed with the project keystore, certificate `CN=DevGuard, O=DevHoss, C=US`)
+- `dist/DevGuard-1.0.3-debug.apk`
+- `dist/DevGuard-1.0.3-release.apk` (signed with the project keystore, certificate `CN=DevGuard, O=DevHoss, C=US`)
 
 `local.properties` points at `X:/Android/Sdk` on this machine; change `sdk.dir` if your SDK
 lives elsewhere. The release build reads `keystore.properties` + `devguard-release.jks`
@@ -95,7 +95,7 @@ lives elsewhere. The release build reads `keystore.properties` + `devguard-relea
 ## Install and one-time ADB setup
 
 ```bash
-adb install -r dist/DevGuard-1.0.2-release.apk
+adb install -r dist/DevGuard-1.0.3-release.apk
 adb shell pm grant com.devhoss.devguard android.permission.WRITE_SECURE_SETTINGS
 ```
 
